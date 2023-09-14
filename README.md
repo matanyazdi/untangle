@@ -2,7 +2,7 @@
  untangle minigame nopixel inspired
 
 temaple:
-
+```
 exports['ol-untangle']:hacking(function(success)
     if success then
         print("success")
@@ -10,3 +10,4 @@ exports['ol-untangle']:hacking(function(success)
         print("fail")
     end
 end, 7, 30) -- amount of does (int), time
+```
