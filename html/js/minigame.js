@@ -1,5 +1,6 @@
 let timer_start, timer_finish, timer_hide, timer_time, wrong, speed, timerStart;
 let game_started = false;
+let dot_size = 10
 const canvas = document.getElementById('game-canvas');
 const ctx = canvas.getContext('2d');
 
@@ -82,7 +83,7 @@ function drawDots() {
     ctx.fillStyle = 'green';
     dots.forEach(dot => {
         ctx.beginPath();
-        ctx.arc(dot.x, dot.y, 7, 0, Math.PI * 2);
+        ctx.arc(dot.x, dot.y, dot_size, 0, Math.PI * 2);
         ctx.fill();
     });
 }
@@ -189,7 +190,7 @@ function addListeners(){
           const dx = e.offsetX - dot.x;
           const dy = e.offsetY - dot.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance <= 7) {
+          if (distance <= dot_size) {
             selectedDot = dot;
             offset.x = dx;
             offset.y = dy;
@@ -220,22 +221,22 @@ function check(timeout){
             document.querySelector('.minigame').classList.add('hidden');
             document.querySelector('.splash').classList.remove('hidden');
             document.querySelector('.untanglecanvas').classList.add('hidden');
-            document.querySelector('.splash').innerHTML = '<div class="fa hacker">&#xf233;</div> By Pass';
+            document.querySelector('.splash').innerHTML = '<div class="fa hacker">&#xf233;</div> <br>Firewall Breached';
             timer_start = sleep(2000, function(){
                 reset()
                 document.querySelector('.splash').classList.add('hidden');
-                $.post(`https://ol-untangle/callback`, JSON.stringify({ 'success': true }));
+                $.post(`https://${GetParentResourceName()}/callback`, JSON.stringify({ 'success': true }));
             })
         }
     } else if (timeout) {
         document.querySelector('.minigame').classList.add('hidden');
         document.querySelector('.splash').classList.remove('hidden');
         document.querySelector('.untanglecanvas').classList.add('hidden');
-        document.querySelector('.splash').innerHTML = '<div class="fa hacker">&#xf233;</div> Failed';
+        document.querySelector('.splash').innerHTML = '<div class="fa hacker">&#xf233;</div> <br>Firewall Breached Failed';
         timer_start = sleep(2000, function(){
             document.querySelector('.splash').classList.add('hidden');
             reset()
-            $.post(`https://ol-untangle/callback`, JSON.stringify({ 'success': false }));
+            $.post(`https://${GetParentResourceName()}/callback`, JSON.stringify({ 'success': false }));
         })
     }
 }
@@ -269,8 +270,9 @@ function start(){
     }
     $(".minigame").fadeIn();
     document.querySelector('.splash').classList.remove('hidden');
+    document.querySelector('.splash').innerHTML = '<div class="fa hacker">&#xf233;</div> <br>Firewall active... Decryption required...';
     document.querySelector('.untanglecanvas').classList.add('hidden');
-    timer_start = sleep(2000, function(){
+    timer_start = sleep(3000, function(){
 
     document.querySelector('.untanglecanvas').classList.remove('hidden');
     document.querySelector('.splash').classList.add('hidden');
@@ -309,7 +311,6 @@ window.addEventListener('message', (event) => {
             amountOfDots = event.data.dots
         }
         speed = 15;
-        console.log(event.data.time)
         if (event.data.time != null) {
             speed = event.data.time
         }
@@ -329,12 +330,12 @@ document.addEventListener("keydown", function(ev) {
                 document.querySelector('.minigame').classList.add('hidden');
                 document.querySelector('.splash').classList.remove('hidden');
                 document.querySelector('.untanglecanvas').classList.add('hidden');
-                document.querySelector('.splash').innerHTML = '<div class="fa hacker">&#xf233;</div> Failed';
+                document.querySelector('.splash').innerHTML = '<div class="fa hacker">&#xf233;</div> <br>Firewall Breached Failed';
                 timer_start = sleep(2000, function(){
                     document.querySelector('.splash').classList.add('hidden');
                     document.querySelector('.untanglecanvas').classList.add('hidden');
                     reset()
-                    $.post(`https://ol-untangle/callback`, JSON.stringify({ 'success': false }));
+                    $.post(`https://${GetParentResourceName()}/callback`, JSON.stringify({ 'success': false }));
                 })
                 break;
         }
